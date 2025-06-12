@@ -25,8 +25,17 @@ export const getCartById = async (req, res) => {
     const cart = await cartService.getCartById(cid);
     res.status(200).json({ status: "success", cart });
   } catch (error) {
-    res.status(500).json({ status: "error", message: "Error al obtener carrito por id"})
+    res.status(500).json({ status: "error", message: "Error al obtener carrito por id"});
   }
 };
 
-export const addProductToCart = async (req, res) =>{};
+export const addProductToCart = async (req, res) =>{
+  try {
+    const cid = req.params.cid;
+    const pid = req.params.pid;
+    const result = await cartService.addProductToCart(cid, pid);
+    res.status(201).json({ status: "success", result });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: `Error al guardar el producto en el carrito`});
+  }
+};
