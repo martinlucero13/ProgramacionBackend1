@@ -1,4 +1,5 @@
 import fs from "fs";
+import Product from "./Product.js";
 
 class ProductManager{
     constructor(pathFile){
@@ -13,18 +14,27 @@ class ProductManager{
         }
     }
 
-    async addProduct(newProduct){
+    async addProduct(newProductData){
         try {
             const fileData = await fs.promises.readFile(this.pathFile, "utf-8");
             const products = JSON.parse(fileData);
             
             const newID = this.generateNewID(products);
-            console.log(newID)
-            const product = { id: newID, ...newProduct};
+            
+            const product = new Product(
+                newID,
+                newProductData.title,
+                newProductData.description,
+                newProductData.code,
+                newProductData.price,
+                newProductData.status,
+                newProductData.stock,
+                newProductData.category,
+                newProductData.thumbnails
+            );
 
             products.push(product);
 
-            //Guardamos en el archivo
             await fs.promises.writeFile(this.pathFile, JSON.stringify(products, null, 2), "utf-8");
         } catch (error) {
             throw new Error("Error al añadir un nuevo producto", error);
@@ -73,7 +83,6 @@ class ProductManager{
     }
 
     async updateProductById(id, updatedFields) {
-        console.log(`Ingresa al update`);
         try {
             const fileData = await fs.promises.readFile(this.pathFile, "utf-8");
             const products = JSON.parse(fileData);
@@ -84,7 +93,21 @@ class ProductManager{
                 throw new Error(`Producto con ID ${id} no encontrado.`);
             }
 
-            products[index] = { ...products[index], ...updatedFields, id: Number(id) };
+            const existingProduct = products[index];
+
+            const updatedProduct = new Product(
+                Number(id),
+                updatedFields.title || existingProduct.title,
+                updatedFields.description || existingProduct.description,
+                updatedFields.code || existingProduct.code,
+                updatedFields.price !== undefined ? updatedFields.price : existingProduct.price,
+                updatedFields.status !== undefined ? updatedFields.status : existingProduct.status,
+                updatedFields.stock !== undefined ? updatedFields.stock : existingProduct.stock,
+                updatedFields.category || existingProduct.category,
+                updatedFields.thumbnails || existingProduct.thumbnails
+            );
+
+            products[index] = updatedProduct;
 
             await fs.promises.writeFile(this.pathFile, JSON.stringify(products, null, 2), "utf-8");
             console.log(`Producto con ID ${id} actualizado correctamente.`);
@@ -92,12 +115,6 @@ class ProductManager{
             throw new Error("Error al actualizar el producto: " + error.message);
         }
     }
-
 }
 
 export default ProductManager
-
-
-/*export class ProductManagerDos{
-
-}*/

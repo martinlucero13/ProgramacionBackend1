@@ -6,8 +6,17 @@
   },
   {
     "id": 2,
-    "title": "Buzo Nike",
-    "desciption": "Buzo cheto"
+    "title": "Mouse Gamer Logitech G502",
+    "description": "Mouse óptico con cable, 11 botones programables, sensor HERO 25K",
+    "code": "MOU-G502",
+    "price": 28999.99,
+    "status": true,
+    "stock": 30,
+    "category": "Periféricos",
+    "thumbnails": [
+      "https://example.com/images/g502-front.jpg",
+      "https://example.com/images/g502-side.jpg"
+    ]
   },
   {
     "id": 3
@@ -16,5 +25,19 @@
     "id": 4,
     "title": "Buzo Puma",
     "desciption": "Buzo piola"
+  },
+  {
+    "id": 5,
+    "title": "Auriculares Bluetooth",
+    "description": "Auriculares inalámbricos con cancelación de ruido",
+    "code": "AUR12345",
+    "price": 14999.99,
+    "status": true,
+    "stock": 50,
+    "category": "Electrónica",
+    "thumbnails": [
+      "https://example.com/images/auriculares1.jpg",
+      "https://example.com/images/auriculares2.jpg"
+    ]
   }
 ]
