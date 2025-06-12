@@ -44,7 +44,7 @@ export default class CartManager {
         return carts.find(cart => cart.id === Number(cid));
     }
 
-    async addProductToCart(cid, pid) {
+    async addProductToCart(cid, pid, data) {
         const carts = await this.getCarts();
         const cartIndex = carts.findIndex(c => c.id === Number(cid));
         if (cartIndex === -1) throw new Error("Carrito no encontrado");
@@ -58,9 +58,9 @@ export default class CartManager {
         const existingProduct = cart.products.find(p => p.product === pid);
 
         if (existingProduct) {
-            existingProduct.quantity += 1;
+            existingProduct.quantity += data.quantity;
         } else {
-            cart.products.push({ product: pid, quantity: 1 });
+            cart.products.push({ product: pid, quantity: data.quantity });
         }
 
         carts[cartIndex] = cart;

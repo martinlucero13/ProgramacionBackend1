@@ -33,7 +33,8 @@ export const addProductToCart = async (req, res) =>{
   try {
     const cid = req.params.cid;
     const pid = req.params.pid;
-    const result = await cartService.addProductToCart(cid, pid);
+    const data = req.body;
+    const result = await cartService.addProductToCart(cid, pid, data);
     res.status(201).json({ status: "success", result });
   } catch (error) {
     res.status(500).json({ status: "error", message: `Error al guardar el producto en el carrito`});
