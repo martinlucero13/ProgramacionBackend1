@@ -1,0 +1,35 @@
+//Aca solo va el contenido que voy a mostrar dentro del body
+//No tengo que repetir la estructura base del HTML 5
+//Doble llave para capturar variables
+<div>
+    <h1>Home Page</h1>
+
+    <div>
+        //Action definimos el endpoint donde queremos apuntar para enviar el producto
+        //Definimos el metodo, en este caso post para hacer el inset 
+        //Por ultimo el enctype para poder dejarlo en multipart y asi nos lee las imagenes
+        <form action="http://localhost:8080/api/products" method="post" enctype="multipart/form-data">
+            <input type="text" name="title" placeholder="Nombre del producto">
+            <input type="number" name="price" placeholder="Precio del producto">
+            <input type="file" name="file">
+            <button type="submit">Agregar Producto</button>
+        </form>
+    </div>
+    {{#each products}}
+        <li>
+            <img src={{this.thumbnail}} alt={{this.title}}>
+            <h2>{{this.title}}</h2>
+            <h3>Precio: {{this.price}}</h3>
+        </li>
+    {{/each}}
+
+    {{#with user}}
+        <h2>{{username}}</h2>
+            
+        {{#if isAdmin}}
+            <h3>Permiso de Admin</h3>
+        {{else}}
+            <h3>No tiene permiso de Admin</h3>
+        {{/if}}
+    {{/with}}
+</div>

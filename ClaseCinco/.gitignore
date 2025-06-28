@@ -1,0 +1,21 @@
+# node_modules
+node_modules/
+
+# logs
+logs
+*.log
+
+# entorno
+.env
+
+# sistema
+.DS_Store
+Thumbs.db
+
+# compilados
+dist/
+build/
+
+# cachés de VSCode o testing
+.vscode/
+coverage/
