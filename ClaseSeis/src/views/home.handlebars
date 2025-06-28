@@ -1,0 +1,61 @@
+<div>
+    <h1>Home Page</h1>
+    <form id="formChat">
+        <input type="text" id="inputUsername" placeholder="Nombre usuario" required>
+        <input type="text" id="inputChat" placeholder="Ingrese el mensaje..." required>
+        <button type="submit">Enviar</button>
+    </form>
+    <div id="chatBox"></div>
+</div>
+
+
+coneccion websocket desde el cliente
+<script src = "/socket.io/socket.io.js"></script>
+<script>
+    //Llamamos a la funcion socket que importamos en el script de arriba e iniciamos la coneccion de socket desde el cliente
+    //Emitimos nuevo evento de coneccion que luego captura el servidor
+    const socket = io();
+
+    //podemos emitir eventos y capturarlos
+    //Emitimos un nuevo evento desde el cliente al servidor
+    //socket.emit("new message", { message: "Saludos desde el cliente"});
+
+    //Capturamos el historial de mensajes
+    socket.on("messages history", (data) =>{
+        const chatBox = document.getElementById("chatBox");
+        data.messages.forEach((dataMessage) => {
+            chatBox.innerHTML += `<p>${dataMessage.username}: ${dataMessage.message}</p>`
+        });
+    });
+
+    //Escuchamos un evento
+    socket.on("welcome", (data) =>{
+        console.log(data);
+    });
+
+
+    //FOMULARIO
+    //Capturamos la etiqueta con su id
+    const formChat = document.getElementById("formChat");
+    const inputChat = document.getElementById("inputChat");
+    const inputUsername = document.getElementById("inputUsername");
+
+    formChat.addEventListener("submit", (event)=>{
+        //Evitamos que se recargue la pagina por defecto para no perder el contenido que tenemos dentro del form
+        event.preventDefault();
+        
+        //Capturamos el mensaje
+        const message = inputChat.value;
+        const username  = inputUsername.value;
+        inputChat.value = "";
+        socket.emit("new message", { message, username });
+    });
+
+
+    //Capturamos los nuevos mensajes
+    socket.on("Broadcast new message", (data) =>{
+        //Insertamos en el html
+        const chatBox = document.getElementById("chatBox");
+        chatBox.innerHTML += `<p>${data.username}: ${data.message}</p>`
+    })
+</script>
