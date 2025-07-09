@@ -1,0 +1,119 @@
+<body>
+    <h1 class="page-title">Home Page</h1>
+    <div class="page-container">
+        <h1 class="page-title">Listado de Productos</h1>
+
+        <div class="cards-container">
+            {{#each products}}
+                <div class="product-card">
+                    <img src="{{this.thumbnails.[0]}}" alt="{{this.title}}" class="product-image">
+
+                    <div class="product-content">
+                        <h2 class="product-title">{{this.title}}</h2>
+                        <p class="product-description">{{this.description}}</p>
+                        <p><strong>Código:</strong> {{this.code}}</p>
+                        <p><strong>Precio:</strong> ${{this.price}}</p>
+                        <p><strong>Stock:</strong> {{this.stock}}</p>
+                        <p><strong>Categoría:</strong> {{this.category}}</p>
+                        <p><strong>Estado:</strong> 
+                            {{#if this.status}}<span class="in-stock">Disponible</span>{{else}}<span class="out-stock">No disponible</span>{{/if}}
+                        </p>
+
+                        {{#if this.thumbnails}}
+                            <div class="product-thumbnails">
+                                {{#each this.thumbnails}}
+                                    <img src="{{this}}" class="thumb-image" alt="Miniatura">
+                                {{/each}}
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+</body>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f0f0f0;
+    }
+
+    .page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .page-title {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #333;
+    }
+
+    .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .product-card {
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: transform 0.2s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .product-content {
+        padding: 1rem;
+    }
+
+    .product-title {
+        margin: 0;
+        font-size: 1.5rem;
+        color: #222;
+    }
+
+    .product-description {
+        color: #666;
+        font-size: 0.9rem;
+        margin: 0.5rem 0;
+    }
+
+    .in-stock {
+        color: green;
+        font-weight: bold;
+    }
+
+    .out-stock {
+        color: red;
+        font-weight: bold;
+    }
+
+    .product-thumbnails {
+        margin-top: 1rem;
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .thumb-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+</style>

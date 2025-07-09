@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "title": "Acer Nitro",
+    "description": "Con su potente intel core i5, su placa de video nvidia y sus 144Hz la hacen una pc ideal para juegos y trabajo.",
+    "code": "55669",
+    "price": 2000000,
+    "status": true,
+    "stock": 10,
+    "category": "Tecnologia",
+    "thumbnails": [
+      "https://http2.mlstatic.com/D_NQ_NP_2X_659188-MLA75954827963_042024-F.webp"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Asus Tuf A15 ",
+    "description": "15,6 Ryzen 7 7735hs 512gb 16gb Rtx4050",
+    "code": "55660",
+    "price": 2100000,
+    "status": true,
+    "stock": 20,
+    "category": "Tecnologia",
+    "thumbnails": [
+      "https://http2.mlstatic.com/D_NQ_NP_2X_947360-MLA82050979369_012025-F.webp"
+    ]
+  }
+]

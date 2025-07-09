@@ -1,0 +1,198 @@
+<body>
+    <h1>Gestión en Tiempo Real de Productos</h1>
+
+    <form id="addProductForm">
+        <input type="text" id="title" placeholder="Título" required>
+        <input type="text" id="description" placeholder="Descripción" required>
+        <input type="text" id="code" placeholder="Código" required>
+        <input type="number" id="price" placeholder="Precio" required>
+        <input type="number" id="stock" placeholder="Stock" required>
+        <input type="text" id="category" placeholder="Categoría" required>
+        <input type="text" id="thumbnail" placeholder="URL de imagen" required>
+        <button type="submit">Agregar producto</button>
+    </form>
+
+    <div class="product-list" id="productList"></div>
+
+    <!-- Modal para editar -->
+    <div class="modal-overlay" id="modalOverlay">
+        <form id="editProductForm" class="modal">
+            <h2>Editar producto</h2>
+            <input type="hidden" id="editId">
+            <input type="text" id="editTitle" placeholder="Título" required>
+            <input type="text" id="editDescription" placeholder="Descripción" required>
+            <input type="text" id="editCode" placeholder="Código" required>
+            <input type="number" id="editPrice" placeholder="Precio" required>
+            <input type="number" id="editStock" placeholder="Stock" required>
+            <input type="text" id="editCategory" placeholder="Categoría" required>
+            <input type="text" id="editThumbnail" placeholder="URL de imagen" required>
+            <button type="submit">Guardar cambios</button>
+            <button type="button" onclick="closeModal()">Cancelar</button>
+        </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        const productList = document.getElementById("productList");
+        const addProductForm = document.getElementById("addProductForm");
+
+        const modalOverlay = document.getElementById("modalOverlay");
+        const editProductForm = document.getElementById("editProductForm");
+
+        socket.emit("getProducts");
+
+        socket.on("updateProductList", products => {
+            productList.innerHTML = "";
+            products.forEach(prod => {
+                const div = document.createElement("div");
+                div.className = "product-card";
+                div.innerHTML = `
+                    <h3>${prod.title}</h3>
+                    <p>${prod.description}</p>
+                    <p><strong>Precio:</strong> $${prod.price}</p>
+                    <p><strong>Stock:</strong> ${prod.stock}</p>
+                    <img src="${prod.thumbnails?.[0] || ''}" alt="img">
+                    <button class="delete-btn" onclick="deleteProduct('${prod.id}')">Eliminar</button>
+                    <button class="edit-btn" onclick='openModal(${JSON.stringify(prod)})'>Editar</button>
+                `;
+                productList.appendChild(div);
+            });
+        });
+
+        addProductForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const product = {
+                title: title.value,
+                description: description.value,
+                code: code.value,
+                price: parseFloat(price.value),
+                stock: parseInt(stock.value),
+                category: category.value,
+                thumbnails: [thumbnail.value],
+                status: true
+            };
+
+            socket.emit("addProduct", product);
+            addProductForm.reset();
+        });
+
+        function deleteProduct(id) {
+            socket.emit("deleteProduct", id);
+        }
+
+        function openModal(prod) {
+            modalOverlay.classList.add("show");
+            editId.value = prod.id;
+            editTitle.value = prod.title;
+            editDescription.value = prod.description;
+            editCode.value = prod.code;
+            editPrice.value = prod.price;
+            editStock.value = prod.stock;
+            editCategory.value = prod.category;
+            editThumbnail.value = prod.thumbnails?.[0] || '';
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove("show");
+        }
+
+        editProductForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const updated = {
+                id: editId.value,
+                title: editTitle.value,
+                description: editDescription.value,
+                code: editCode.value,
+                price: parseFloat(editPrice.value),
+                stock: parseInt(editStock.value),
+                category: editCategory.value,
+                thumbnails: [editThumbnail.value],
+                status: true
+            };
+
+            socket.emit("updateProduct", updated);
+            closeModal();
+        });
+    </script>
+</body>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 2rem;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    form, .modal {
+        max-width: 600px;
+        margin: 1rem auto;
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    input, button {
+        width: 100%;
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+    }
+
+    .product-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .product-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .product-card img {
+        max-width: 100%;
+    }
+
+    .delete-btn {
+        background-color: crimson;
+        color: white;
+        border: none;
+        margin-top: 0.5rem;
+    }
+
+    .edit-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        margin-top: 0.5rem;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        display: none;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+    }
+
+    .modal {
+        width: 90%;
+        max-width: 500px;
+    }
+
+    .modal-overlay.show {
+        display: flex;
+    }
+</style>
